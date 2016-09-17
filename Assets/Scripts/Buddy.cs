@@ -19,6 +19,8 @@ public class Buddy : NetworkBehaviour {
     GameObject bullet;
 
     Vector3 firePos;
+
+    [SyncVar]
     Vector3 hitPos;
    
     bool bulletFired;
@@ -40,6 +42,11 @@ public class Buddy : NetworkBehaviour {
     {
         if (cd <= 0.0f)
         {
+            Vector3 forw = pos - transform.position;
+            var lookPos = hitPos - transform.position;
+            lookPos.y = 0;
+            var rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = rotation;
             bullet = (GameObject)Instantiate(myBullet, fireLocation.position, fireLocation.rotation);
             Projectile proj = bullet.GetComponent<Projectile>();
             proj.maker = this;
@@ -62,16 +69,21 @@ public class Buddy : NetworkBehaviour {
                 hitPos = hit.point;
             }
 
-            var lookPos = hitPos - transform.position;
-            lookPos.y = 0;
-            var rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = rotation;
+            //var lookPos = hitPos - transform.position;
+            //lookPos.y = 0;
+            //var rotation = Quaternion.LookRotation(lookPos);
+            //transform.rotation = rotation;
 
         }
         else if (lineRend.enabled)
         {
             lineRend.enabled = false;
         }
+
+        var lookPos = hitPos - transform.position;
+        lookPos.y = 0;
+        var rotation = Quaternion.LookRotation(lookPos);
+        transform.rotation = rotation;
     }
 
     // Update is called once per frame
