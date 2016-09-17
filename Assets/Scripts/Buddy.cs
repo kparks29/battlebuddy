@@ -105,7 +105,7 @@ public class Buddy : NetworkBehaviour {
 
     public void TakeDamage(float amount)
     {
-        //if (myPlayer.isLocalPlayer)
+        if (myPlayer.isLocalPlayer)
         {
             myPlayer.CmdTakeDamage(amount);
         }
