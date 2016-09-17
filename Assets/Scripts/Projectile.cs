@@ -27,10 +27,10 @@ public class Projectile : MonoBehaviour {
     {
         if (c.tag == "Buddy" && c.GetComponent<Buddy>() != maker)
         {
-            if (maker.myPlayer.isLocalPlayer)
+            //if (maker.myPlayer.isLocalPlayer)
             {
                 Buddy b = c.GetComponent<Buddy>();
-                print("Hit player " + b.playerNumber);
+                print("Player "+maker.myPlayer.playerNumber+ " Hit player " + b.playerNumber);
                 b.TakeDamage(damage);
                 Destroy(gameObject);
             }
