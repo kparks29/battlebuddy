@@ -42,11 +42,11 @@ public class Buddy : NetworkBehaviour {
     {
         if (cd <= 0.0f)
         {
-            Vector3 forw = pos - transform.position;
-            var lookPos = hitPos - transform.position;
-            lookPos.y = 0;
-            var rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = rotation;
+            //Vector3 forw = pos - transform.position;
+            //var lookPos = hitPos - transform.position;
+            //lookPos.y = 0;
+            //var rotation = Quaternion.LookRotation(lookPos);
+            //transform.rotation = rotation;
             bullet = (GameObject)Instantiate(myBullet, fireLocation.position, fireLocation.rotation);
             Projectile proj = bullet.GetComponent<Projectile>();
             proj.maker = this;
