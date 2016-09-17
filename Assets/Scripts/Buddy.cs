@@ -69,10 +69,10 @@ public class Buddy : NetworkBehaviour {
                 hitPos = hit.point;
             }
 
-            //var lookPos = hitPos - transform.position;
-            //lookPos.y = 0;
-            //var rotation = Quaternion.LookRotation(lookPos);
-            //transform.rotation = rotation;
+            var lookPos = hitPos - transform.position;
+            lookPos.y = 0;
+            var rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = rotation;
 
         }
         else if (lineRend.enabled)
@@ -80,10 +80,10 @@ public class Buddy : NetworkBehaviour {
             lineRend.enabled = false;
         }
 
-        var lookPos = hitPos - transform.position;
-        lookPos.y = 0;
-        var rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = rotation;
+        //var lookPos = hitPos - transform.position;
+        //lookPos.y = 0;
+        //var rotation = Quaternion.LookRotation(lookPos);
+        //transform.rotation = rotation;
     }
 
     // Update is called once per frame
@@ -105,7 +105,7 @@ public class Buddy : NetworkBehaviour {
 
     public void TakeDamage(float amount)
     {
-        if (myPlayer.isLocalPlayer)
+        //if (myPlayer.isLocalPlayer)
         {
             myPlayer.CmdTakeDamage(amount);
         }
