@@ -246,7 +246,20 @@ public class PlayerController : NetworkBehaviour {
         myBuddy.CalculateDamageTaken(amount);
         if(myBuddy.health <= 0.0f)
         {
-            print("You died");
+            if (isLocalPlayer)
+            {
+                print("You lose");
+            }
+            else
+            {
+                print("You win!");
+            }
+            Destroy(myBuddy.gameObject);
         }
+        if(isLocalPlayer && myBuddy.health <= 0.0f)
+        {
+            print("Dead");
+        }
+
     }
 }
