@@ -9,5 +9,6 @@ public class User {
 	public int wins;
 	public int loses;
 	public int code;
+	public int equiped_loadout_index;
 	public List<Loadout> loadouts;
 }
