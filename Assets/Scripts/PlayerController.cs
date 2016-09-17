@@ -215,8 +215,11 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     void RpcRightTriggerPull(Vector3 pos)
     {
-        //if(isLocalPlayer)
-            myBuddy.Fire(pos);
+        var lookPos = pos - myBuddy.transform.position;
+        lookPos.y = 0;
+        var rotation = Quaternion.LookRotation(lookPos);
+        myBuddy.transform.rotation = rotation;
+        myBuddy.Fire(pos);
     }
 
     [Command]
