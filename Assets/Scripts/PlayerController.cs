@@ -244,7 +244,7 @@ public class PlayerController : NetworkBehaviour {
     void RpcTakeDamage(float amount)
     {
         myBuddy.CalculateDamageTaken(amount);
-        if(amount <= 0.0f)
+        if(myBuddy.health <= 0.0f)
         {
             print("You died");
         }

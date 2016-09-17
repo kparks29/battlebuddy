@@ -40,18 +40,10 @@ public class Buddy : NetworkBehaviour {
     {
         if (cd <= 0.0f)
         {
-            //Vector3 forward = (pos - transform.position).normalized;
             bullet = (GameObject)Instantiate(myBullet, fireLocation.position, fireLocation.rotation);
             Projectile proj = bullet.GetComponent<Projectile>();
             proj.maker = this;
-            //travelTime = proj.travelTime;
             cd = proj.cd;
-            //bullet.transform.parent = null;
-            //firePos = fireLocation.position;
-            //hitPos = new Vector3(pos.x, startHeight, pos.z);
-            //hitLocation.position = pos;
-            //startTime = Time.time;
-            //bulletFired = true;
         }
     }
 
@@ -83,20 +75,6 @@ public class Buddy : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-	    //if(bulletFired && bullet != null)
-     //   {
-     //       float percentComplete = (Time.time - startTime) / travelTime;
-     //       bullet.transform.position = Vector3.Lerp(firePos, hitPos, percentComplete);
-
-     //       if(percentComplete >= .99f)
-     //       {
-     //           StartCoroutine(KillBullet());
-     //       }
-     //   }
-     //   else
-     //   {
-     //       cd -= Time.deltaTime;
-     //   }
         if(cd >= 0.0f)
         {
             cd -= Time.deltaTime;
