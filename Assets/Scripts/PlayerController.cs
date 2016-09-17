@@ -130,7 +130,7 @@ public class PlayerController : NetworkBehaviour {
                     //print(hitPos);
                     //lineRend.enabled = false;
                     casting = false;
-                    CmdRightTriggerPull(hitPos);
+                    CmdRightTriggerPull(hitPos, myBuddy.transform.rotation);
                     //myBuddy.hitLocation.position = hitPos;
                     //myBuddy.Fire();
                 }
@@ -207,18 +207,16 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [Command]
-    void CmdRightTriggerPull(Vector3 pos)
+    void CmdRightTriggerPull(Vector3 pos, Quaternion rot)
     {
-        RpcRightTriggerPull(pos);
+        RpcRightTriggerPull(pos, rot);
     }
 
     [ClientRpc]
-    void RpcRightTriggerPull(Vector3 pos)
+    void RpcRightTriggerPull(Vector3 pos, Quaternion rot)
     {
-        var lookPos = pos - myBuddy.transform.position;
-        lookPos.y = 0;
-        var rotation = Quaternion.LookRotation(lookPos);
-        myBuddy.transform.rotation = rotation;
+       
+        myBuddy.transform.rotation = rot;
         myBuddy.Fire(pos);
     }
 
