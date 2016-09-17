@@ -65,7 +65,7 @@ public class Buddy : NetworkBehaviour {
             var lookPos = hitPos - transform.position;
             lookPos.y = 0;
             var rotation = Quaternion.LookRotation(lookPos);
-            body.transform.rotation = rotation;
+            transform.rotation = rotation;
         }
         else if (lineRend.enabled)
         {

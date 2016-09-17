@@ -55,6 +55,7 @@ public class PlayerController : NetworkBehaviour {
             {
                 if (s.index == playerNumber)
                 {
+                    transform.forward = s.transform.forward;
                     pc.transform.position = s.transform.position;
                     pc.transform.rotation = s.transform.rotation;
                     buddyStart = s.buddyStart;
@@ -188,8 +189,8 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     void RpcLeftMove(Vector2 movement)
     {
-        myBuddy.transform.position += myBuddy.transform.forward * movement.y * Time.deltaTime * 3;
-        myBuddy.transform.position += myBuddy.transform.right * movement.x * Time.deltaTime * 3;
+        myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
+        myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
     }
 
     [Command]
