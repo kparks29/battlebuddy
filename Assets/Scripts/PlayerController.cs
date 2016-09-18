@@ -162,53 +162,17 @@ public class PlayerController : NetworkBehaviour {
     {
         if (isLocalPlayer)
         {
-
-            if (leftHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                //print("Left CLick");
-                //CmdLeftTriggerPull();
-                leftCasting = true;
-            }
-
-            if (leftHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                leftCasting = false;
-                if (readyCollider != null)
-                {
-
-                    if (playerNumber == 1)
-                    {
-                        CmdHitBox(1);
-                        print("P1 click ready");
-                        //readyCollider.GetComponentInParent<LevelManager>().CmdP1Ready();
-                    }
-                    else if (playerNumber == 2)
-                    {
-                        CmdHitBox(2);
-                        print("P2 clicked ready");
-                        //readyCollider.GetComponentInParent<LevelManager>().CmdP2Ready();
-                    }
-                    else
-                    {
-                        Debug.LogWarning("No proper playerNumber");
-                    }
-                }
-            }
-
             if (myBuddy != null)
             {
+                leftCasting = false;
                 if (rightHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     rightCasting = true;
                 }
                 if (rightHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
                 {
-                    //print(hitPos);
-                    //lineRend.enabled = false;
                     rightCasting = false;
                     CmdRightTriggerPull(hitPos, myBuddy.transform.rotation);
-                    //myBuddy.hitLocation.position = hitPos;
-                    //myBuddy.Fire();
                 }
 
                 if (rightHandDevice.GetAxis() != Vector2.zero)
@@ -221,12 +185,46 @@ public class PlayerController : NetworkBehaviour {
                     CmdLeftMove(leftHandDevice.GetAxis(), myBuddy.transform.position);
                 }
             }
+            else
+            {
+                if (leftHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                {
+                    leftCasting = true;
+                }
+
+                if (leftHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                {
+                    leftCasting = false;
+                    if (readyCollider != null)
+                    {
+
+                        if (playerNumber == 1)
+                        {
+                            CmdHitBox(1);
+                            print("P1 click ready");
+                            //readyCollider.GetComponentInParent<LevelManager>().CmdP1Ready();
+                        }
+                        else if (playerNumber == 2)
+                        {
+                            CmdHitBox(2);
+                            print("P2 clicked ready");
+                            //readyCollider.GetComponentInParent<LevelManager>().CmdP2Ready();
+                        }
+                        else
+                        {
+                            Debug.LogWarning("No proper playerNumber");
+                        }
+                    }
+                }
+            }
+
+
         }
 
-        //if (isServer && Input.GetKeyDown(KeyCode.A))
-        //{
-        //    CmdCreateBuddy();
-        //}
+        if (isServer && Input.GetKeyDown(KeyCode.A))
+        {
+            CmdCreateBuddy();
+        }
     }
 
     [Command]

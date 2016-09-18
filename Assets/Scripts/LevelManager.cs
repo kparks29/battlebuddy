@@ -48,7 +48,10 @@ public class LevelManager : NetworkBehaviour {
     [ClientRpc]
     void RpcP1Ready(bool truth)
     {
-        p1ReadySign.GetComponent<Renderer>().material.color = Color.green;
+        if(truth)
+            p1ReadySign.GetComponent<Renderer>().material.color = Color.green;
+        else
+            p1ReadySign.GetComponent<Renderer>().material.color = Color.grey;
         p1Ready = truth;
     }
 
@@ -61,7 +64,10 @@ public class LevelManager : NetworkBehaviour {
     [ClientRpc]
     void RpcP2Ready(bool truth)
     {
-        p2ReadySign.GetComponent<Renderer>().material.color = Color.green;
+        if (truth)
+            p2ReadySign.GetComponent<Renderer>().material.color = Color.green;
+        else
+            p2ReadySign.GetComponent<Renderer>().material.color = Color.grey;
         p2Ready = truth;
     }
 
@@ -87,8 +93,6 @@ public class LevelManager : NetworkBehaviour {
     [ClientRpc]
     void RpcEndBattle()
     {
-        p1ReadySign.GetComponent<Renderer>().material.color = Color.grey;
-        p2ReadySign.GetComponent<Renderer>().material.color = Color.grey;
         if (isServer)
         {
             CmdP1Ready(false);
