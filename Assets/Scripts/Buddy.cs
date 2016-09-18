@@ -9,7 +9,7 @@ public class Buddy : NetworkBehaviour {
     public GameObject myBullet;
     public Transform body;
     public PlayerController myPlayer;
-
+    public Renderer rend;
     [SyncVar]
     public int playerNumber;
 
@@ -35,7 +35,7 @@ public class Buddy : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        myOGColor = GetComponentInChildren<Renderer>().material.color;
+        myOGColor = rend.material.color;
         lineRend = GetComponent<LineRenderer>();
         hitLocation.transform.parent = null;
         startHeight = fireLocation.position.y;
@@ -47,11 +47,6 @@ public class Buddy : NetworkBehaviour {
     {
         if (cd <= 0.0f)
         {
-            //Vector3 forw = pos - transform.position;
-            //var lookPos = hitPos - transform.position;
-            //lookPos.y = 0;
-            //var rotation = Quaternion.LookRotation(lookPos);
-            //transform.rotation = rotation;
             bullet = (GameObject)Instantiate(myBullet, fireLocation.position, fireLocation.rotation);
             Projectile proj = bullet.GetComponent<Projectile>();
             proj.maker = this;
@@ -61,7 +56,7 @@ public class Buddy : NetworkBehaviour {
 
     void LateUpdate()
     {
-        if (myPlayer.isLocalPlayer && myPlayer.casting)
+        if (myPlayer.isLocalPlayer && myPlayer.rightCasting)
         {
             if (!lineRend.enabled)
                 lineRend.enabled = true;
@@ -121,7 +116,7 @@ public class Buddy : NetworkBehaviour {
     {
         health -= amount;
         print("Took " + amount + " damage, " + health + " health remaining");
-        GetComponentInChildren<Renderer>().material.color = Color.yellow;
+        rend.material.color = Color.yellow;
         StartCoroutine(ChangeColorBack());
         return health;
     }
@@ -129,6 +124,6 @@ public class Buddy : NetworkBehaviour {
     IEnumerator ChangeColorBack()
     {
         yield return new WaitForSeconds(.15f);
-        GetComponentInChildren<Renderer>().material.color = myOGColor;
+        rend.material.color = myOGColor;
     }
 }

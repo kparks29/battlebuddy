@@ -43,28 +43,32 @@ public class LevelManager : NetworkBehaviour {
 	void Update () {
 	    if(p1Ready && p2Ready && go)
         {
-            go = false;
             if (isServer)
             {
+                go = false;
                 StartCoroutine(LoadBattle());
             }
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad0) && isServer)
         {
-            StartCoroutine(LoadBattle());
+            //StartCoroutine(LoadBattle());
         }
 	}
 
     IEnumerator LoadBattle()
     {
         yield return new WaitForSeconds(1.25f);
-        manager.ServerChangeScene("Arena");
+        foreach(PlayerController p in FindObjectsOfType<PlayerController>())
+        {
+            p.CmdCreateBuddy();
+        }
+        //manager.ServerChangeScene("Arena");
     }
 
     IEnumerator LoadLobby()
     {
         yield return new WaitForSeconds(1.25f);
-        manager.ServerChangeScene("Lobby");
+        //manager.ServerChangeScene("Lobby");
     }
 }

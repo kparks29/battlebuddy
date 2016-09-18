@@ -23,18 +23,20 @@ public class PlayerController : NetworkBehaviour {
     public Buddy myBuddy;
     public Transform buddyStart;
 
-    public bool casting = false;
-
+    public bool rightCasting = false;
+    public bool leftCasting = false;
     PlatformController pc;
-    
+
     Color rightHandColor;
     Color leftHandColor;
     bool rightTrigger = false;
     bool leftTrigger = false;
+    bool readyCheck = false;
 
     Renderer rightRend;
     Renderer leftRend;
 
+    Collider readyCollider;
 
     private SteamVR_Controller.Device leftHandDevice;
     private SteamVR_Controller.Device rightHandDevice;
@@ -121,7 +123,37 @@ public class PlayerController : NetworkBehaviour {
 
             if (myBuddy != null)
             {
-                image.transform.localScale = new Vector3(myBuddy.health / 5, image.transform.localScale.y, image.transform.localScale.z);
+                image.transform.localScale = new Vector3(myBuddy.health / 20, image.transform.localScale.y, image.transform.localScale.z);
+            }
+
+            if (leftCasting)
+            {
+                if (!lineRend.enabled)
+                    lineRend.enabled = true;
+                Ray ray = new Ray(networkLeftHand.position, networkLeftHand.forward);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    lineRend.SetPosition(0, networkLeftHand.position);
+                    lineRend.SetPosition(1, new Vector3(hit.point.x, hit.point.y, hit.point.z));
+                    hitPos = hit.point;
+
+                    if (hit.collider.tag == "ReadySign")
+                    {
+                        readyCheck = true;
+                        readyCollider = hit.collider;
+                    }
+                    else
+                    {
+                        readyCheck = false;
+                        readyCollider = null;
+                    }
+
+                }
+            }
+            else if (lineRend.enabled)
+            {
+                lineRend.enabled = false;
             }
         }
     }
@@ -130,24 +162,48 @@ public class PlayerController : NetworkBehaviour {
     {
         if (isLocalPlayer)
         {
+
+            if (leftHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                //print("Left CLick");
+                //CmdLeftTriggerPull();
+                leftCasting = true;
+            }
+
+            if (leftHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                leftCasting = false;
+                if (readyCollider != null)
+                {
+                    if (playerNumber == 1)
+                    {
+                        readyCollider.GetComponentInParent<LevelManager>().p1Ready = true;
+                    }
+                    else if (playerNumber == 2)
+                    {
+                        readyCollider.GetComponentInParent<LevelManager>().p2Ready = true;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No proper playerNumber");
+                    }
+                }
+            }
+
             if (myBuddy != null)
             {
                 if (rightHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
-                    casting = true;
+                    rightCasting = true;
                 }
                 if (rightHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     //print(hitPos);
                     //lineRend.enabled = false;
-                    casting = false;
+                    rightCasting = false;
                     CmdRightTriggerPull(hitPos, myBuddy.transform.rotation);
                     //myBuddy.hitLocation.position = hitPos;
                     //myBuddy.Fire();
-                }
-                if (leftHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    CmdLeftTriggerPull();
                 }
 
                 if (rightHandDevice.GetAxis() != Vector2.zero)
@@ -162,10 +218,10 @@ public class PlayerController : NetworkBehaviour {
             }
         }
 
-        if (isServer && Input.GetKeyDown(KeyCode.A))
-        {
-            CmdCreateBuddy();
-        }
+        //if (isServer && Input.GetKeyDown(KeyCode.A))
+        //{
+        //    CmdCreateBuddy();
+        //}
     }
 
     [Command]
@@ -200,16 +256,21 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     void CmdLeftMove(Vector2 movement, Vector3 pos)
     {
-        myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
-        myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
-        RpcLeftMove(myBuddy.transform.position);
+        if (myBuddy != null)
+        {
+            myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
+            myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
+            RpcLeftMove(myBuddy.transform.position);
+        }
+        else
+        {
+            print("Buddy null");
+        }
     }
 
     [ClientRpc]
     void RpcLeftMove(Vector3 pos)
     {
-        //myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
-        //myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
         myBuddy.transform.position = pos;
     }
 
