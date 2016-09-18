@@ -126,7 +126,7 @@ public class Buddy : NetworkBehaviour {
         if (myPlayer.isLocalPlayer)
         {
             print("Hit");
-            myPlayer.CmdTakeDamage(amount);
+            myPlayer.CmdTakeDamage(amount / myPlayer.defense);
         }
     }
     

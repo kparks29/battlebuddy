@@ -19,7 +19,14 @@ public class PlayerController : NetworkBehaviour {
     public int score = 0;
 
     [SyncVar]
-    public float speed = 5.0f;
+    public float attack = 1;
+
+    [SyncVar]
+    public float defense = 1;
+
+    [SyncVar]
+    public float speed = 1f;
+
 
     bool sprinting = false;
     public GameObject buddyPrefab;
@@ -310,8 +317,8 @@ public class PlayerController : NetworkBehaviour {
     {
         if (myBuddy != null)
         {
-            myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * speed;
-            myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * speed;
+            myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * speed * 5;
+            myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * speed * 5;
             RpcLeftMove(myBuddy.transform.position);
         }
         else
