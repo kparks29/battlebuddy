@@ -160,6 +160,12 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     public void CmdCreateBuddy()
     {
+        //foreach(PlayerController p in FindObjectsOfType<PlayerController>())
+        //{
+
+        //}
+        GameObject bud = (GameObject)Instantiate(buddyPrefab, buddyStart.position, buddyStart.rotation);
+        myBuddy = bud.GetComponent<Buddy>();
         RpcCreateBuddy();
     }
 
@@ -174,7 +180,7 @@ public class PlayerController : NetworkBehaviour {
                 buddyStart = s.buddyStart;
             }
         }
-
+        
         GameObject bud = (GameObject)Instantiate(buddyPrefab, buddyStart.position, buddyStart.rotation);
         myBuddy = bud.GetComponent<Buddy>();
         myBuddy.myPlayer = this;
