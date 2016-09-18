@@ -65,6 +65,19 @@ public class LevelManager : NetworkBehaviour {
         p2Ready = true;
     }
 
+    [Command]
+    void CmdStartBattle()
+    {
+        RpcStartBattle();
+    }
+
+    [ClientRpc]
+    void RpcStartBattle()
+    {
+        p1ReadySign.GetComponent<Renderer>().material.color = Color.red;
+        p2ReadySign.GetComponent<Renderer>().material.color = Color.red;
+    }
+
     // Update is called once per frame
     void Update () {
 	    if(p1Ready && p2Ready && go)
@@ -90,8 +103,7 @@ public class LevelManager : NetworkBehaviour {
             p.CmdCreateBuddy();
         }
 
-        p1ReadySign.GetComponent<Renderer>().material.color = Color.red;
-        p2ReadySign.GetComponent<Renderer>().material.color = Color.red;
+        CmdStartBattle();
         //manager.ServerChangeScene("Arena");
     }
 
