@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Buddy : NetworkBehaviour {
 
@@ -10,6 +11,9 @@ public class Buddy : NetworkBehaviour {
     public Transform body;
     public PlayerController myPlayer;
     public Renderer rend;
+    public Image image;
+
+
     [SyncVar]
     public int playerNumber;
 
@@ -79,6 +83,14 @@ public class Buddy : NetworkBehaviour {
         {
             lineRend.enabled = false;
         }
+        
+        image.transform.localScale = new Vector3(health / 20, image.transform.localScale.y, image.transform.localScale.z);
+
+        var look = Camera.main.transform.position - transform.position;
+        look.y = 0;
+        var rot = Quaternion.LookRotation(look);
+        image.transform.rotation = rot;
+
 
         //var lookPos = hitPos - transform.position;
         //lookPos.y = 0;
