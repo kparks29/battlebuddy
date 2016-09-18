@@ -93,9 +93,15 @@ public class LevelManager : NetworkBehaviour {
         {
             CmdP1Ready(false);
             CmdP2Ready(false);
-            go = true;
-        }
 
+            StartCoroutine(WaitToEnableGo());
+        }
+    }
+
+    IEnumerator WaitToEnableGo()
+    {
+        yield return new WaitForSeconds(1.5f);
+        go = true;
     }
 
     // Update is called once per frame
