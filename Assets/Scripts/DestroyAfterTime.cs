@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DestroyAfterTime : MonoBehaviour {
 
-    float lifeTime = 10.0f;
+    public float lifeTime = 10.0f;
 	// Use this for initialization
 	void Start () {
 	

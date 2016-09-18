@@ -31,7 +31,8 @@ public class Projectile : MonoBehaviour {
         if ((c.tag == "Buddy" || c.tag == "Wall") && c.GetComponent<Buddy>() != maker)
         {
             {
-                Instantiate(explosion, transform.position, transform.rotation);
+                if(explosion != null)
+                    Instantiate(explosion, transform.position, transform.rotation);
                 Buddy b = c.GetComponent<Buddy>();
                 if (b != null)
                 {
