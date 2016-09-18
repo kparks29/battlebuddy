@@ -69,8 +69,8 @@ public class PlayerController : NetworkBehaviour {
 
             CmdSetPlayerNumber(playerNumber);
 
-            rightHandDevice = SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index);
-            leftHandDevice = SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index);
+            //rightHandDevice = SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index);
+            //leftHandDevice = SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index);
         }
         else
         {
@@ -165,34 +165,34 @@ public class PlayerController : NetworkBehaviour {
             if (myBuddy != null)
             {
                 leftCasting = false;
-                if (rightHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                if (SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     rightCasting = true;
                 }
-                if (rightHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                if (SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     rightCasting = false;
                     CmdRightTriggerPull(hitPos, myBuddy.transform.rotation);
                 }
 
-                if (rightHandDevice.GetAxis() != Vector2.zero)
+                if (SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis() != Vector2.zero)
                 {
                     //CmdRightMove(rightHandDevice.GetAxis());
                 }
 
-                if (leftHandDevice.GetAxis() != Vector2.zero)
+                if (SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis() != Vector2.zero)
                 {
-                    CmdLeftMove(leftHandDevice.GetAxis(), myBuddy.transform.position);
+                    CmdLeftMove(SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis(), myBuddy.transform.position);
                 }
             }
             else
             {
-                if (leftHandDevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                if (SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     leftCasting = true;
                 }
 
-                if (leftHandDevice.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                if (SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
                 {
                     leftCasting = false;
                     if (readyCollider != null)
