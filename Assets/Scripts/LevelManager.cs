@@ -40,29 +40,29 @@ public class LevelManager : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdP1Ready()
+    public void CmdP1Ready(bool truth)
     {
-        RpcP1Ready();
+        RpcP1Ready(truth);
     }
 
     [ClientRpc]
-    void RpcP1Ready()
+    void RpcP1Ready(bool truth)
     {
         p1ReadySign.GetComponent<Renderer>().material.color = Color.green;
-        p1Ready = true;
+        p1Ready = truth;
     }
 
     [Command]
-    public void CmdP2Ready()
+    public void CmdP2Ready(bool truth)
     {
-        RpcP2Ready();
+        RpcP2Ready(truth);
     }
 
     [ClientRpc]
-    void RpcP2Ready()
+    void RpcP2Ready(bool truth)
     {
         p2ReadySign.GetComponent<Renderer>().material.color = Color.green;
-        p2Ready = true;
+        p2Ready = truth;
     }
 
     [Command]
@@ -89,6 +89,13 @@ public class LevelManager : NetworkBehaviour {
     {
         p1ReadySign.GetComponent<Renderer>().material.color = Color.grey;
         p2ReadySign.GetComponent<Renderer>().material.color = Color.grey;
+        if (isServer)
+        {
+            CmdP1Ready(false);
+            CmdP2Ready(false);
+            go = true;
+        }
+
     }
 
     // Update is called once per frame
