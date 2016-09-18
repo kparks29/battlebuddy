@@ -1,44 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
+using System.Collections.Generic;
 
 public class WebRequestManager : MonoBehaviour {
 
 	string baseUrl = "https://battlebuddy.herokuapp.com";
-	User player1;
 
-	IEnumerator getUser (string code) {
+	IEnumerator getUser (string code, System.Action<User> callback) {
 		UnityWebRequest www = UnityWebRequest.Get (baseUrl + "/users/" + code);
 		yield return www.Send ();
 
 		if (www.isError) {
 			Debug.LogWarning (www.error);
 		} else {
-			player1 = JsonUtility.FromJson<User> (www.downloadHandler.text);
+			callback(JsonUtility.FromJson<User> (www.downloadHandler.text));
 		}
 	}
 
-	IEnumerator createUser (User user) {
-		WWWForm data = new WWWForm ();
-		data.AddField ("name", user.name);
-		data.AddField ("gender", user.gender);
-		data.AddField ("type", user.type);
-		UnityWebRequest www = UnityWebRequest.Post(baseUrl + "/users", data);
+	IEnumerator getItems (string category, System.Action<List<Item>> callback) {
+		UnityWebRequest www = UnityWebRequest.Get (baseUrl + "/items?category=" + category);
 		yield return www.Send ();
 
 		if (www.isError) {
 			Debug.LogWarning (www.error);
 		} else {
-			Debug.Log(www.downloadHandler.text);
-			player1 = JsonUtility.FromJson<User> (www.downloadHandler.text);
+			Items results = JsonUtility.FromJson<Items> (www.downloadHandler.text);
+			callback (results.items);
 		}
 	}
 
 	void Start () {
-		User newUser = new User ();
-		newUser.name = "Bob Lob Law";
-		newUser.gender = "male";
-		newUser.type = "attack";
-		StartCoroutine(createUser(newUser));
+		User player;
+		List<Item> weapons;
+		StartCoroutine(getUser("123", (user) => {
+			player = user;
+		}));
+		StartCoroutine(getItems("weapon", (items) => {
+			weapons = items;
+		}));
 	}
 }
