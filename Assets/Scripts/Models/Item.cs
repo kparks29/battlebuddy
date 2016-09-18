@@ -11,4 +11,8 @@ public class Item {
 	public int range;
 	public decimal spread;
 	public int speed;
+	public int health;
+	public decimal multiplier;
+	public decimal effect;
+	public int cooldown;
 }
