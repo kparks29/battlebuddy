@@ -330,7 +330,8 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     void RpcLeftMove(Vector3 pos)
     {
-        myBuddy.transform.position = pos;
+        if(myBuddy != null)
+            myBuddy.transform.position = pos;
     }
 
     [Command]
@@ -393,6 +394,7 @@ public class PlayerController : NetworkBehaviour {
             if (isLocalPlayer)
             {
                 CmdFinishBattle(true);
+                print("You Lost");
             }
             else
             {
