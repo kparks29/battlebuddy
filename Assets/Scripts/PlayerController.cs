@@ -269,9 +269,9 @@ public class PlayerController : NetworkBehaviour {
         if (isServer)
         {
             speed *= 3;
-            sprinting = true;
             StartCoroutine(SpeedAbilityTimer());
         }
+        sprinting = true;
         sprintCDTimer = 15.0f;
     }
 
