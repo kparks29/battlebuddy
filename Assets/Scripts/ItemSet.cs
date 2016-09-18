@@ -46,7 +46,7 @@ public class ItemSet : NetworkBehaviour {
 
     public void SetupWeap(int i)
     {
-        if (isServer)
+        if (GetComponent<Buddy>().myPlayer.isLocalPlayer)
         {
             CmdSetupWeapon(i);
         }
