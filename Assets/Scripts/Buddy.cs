@@ -36,6 +36,8 @@ public class Buddy : NetworkBehaviour {
         lineRend = GetComponent<LineRenderer>();
         hitLocation.transform.parent = null;
         startHeight = fireLocation.position.y;
+        if(myPlayer.isLocalPlayer)
+            playerNumber = myPlayer.playerNumber;
     }
 
     public void Fire(Vector3 pos)
