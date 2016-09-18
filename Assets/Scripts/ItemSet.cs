@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class ItemSet : MonoBehaviour {
+public class ItemSet : NetworkBehaviour {
 
     public GameObject[] weapons;
     public GameObject[] projectiles;
@@ -28,9 +29,12 @@ public class ItemSet : MonoBehaviour {
       {
             if(g.name == itemName)
             {
-                print(GetComponent<Buddy>().name);
-                print(projectiles[i].name);
-                GetComponent<Buddy>().myBullet = projectiles[i];
+                SetupWeap(i);
+                ////GetComponent<Buddy>().myBullet = projectiles[i];
+                //if (GetComponent<Buddy>().myPlayer.isLocalPlayer)
+                //{
+                //    CmdSetupWeapon(i);
+                //}
             }
             else
             {
@@ -39,6 +43,30 @@ public class ItemSet : MonoBehaviour {
             i++;
         }
     }
+
+    public void SetupWeap(int i)
+    {
+        if (isServer)
+        {
+            CmdSetupWeapon(i);
+        }
+    }
+
+    [Command]
+    void CmdSetupWeapon(int i)
+    {
+        RpcSetupWeapon(i);
+    }
+
+    [ClientRpc]
+    void RpcSetupWeapon(int i)
+    {
+        //if(myBuddy != null)
+        {
+            GetComponent<Buddy>().myBullet = projectiles[i];
+        }
+    }
+
 
     public void setupArmor(string itemName)
     {
