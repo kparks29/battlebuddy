@@ -383,7 +383,7 @@ public class PlayerController : NetworkBehaviour {
             Buddy[] b = FindObjectsOfType<Buddy>();
             foreach(Buddy bud in b)
             {
-                Destroy(bud);
+                Destroy(bud.gameObject);
             }
 
             LevelManager lm = FindObjectOfType<LevelManager>();
