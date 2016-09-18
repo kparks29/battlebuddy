@@ -378,14 +378,13 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     void RpcFinishBattle(bool lost)
     {
+        Buddy[] b = FindObjectsOfType<Buddy>();
+        foreach (Buddy bud in b)
+        {
+            Destroy(bud.gameObject);
+        }
         if (isServer)
         {
-            Buddy[] b = FindObjectsOfType<Buddy>();
-            foreach(Buddy bud in b)
-            {
-                Destroy(bud.gameObject);
-            }
-
             LevelManager lm = FindObjectOfType<LevelManager>();
             lm.CmdEndBattle();
         }
