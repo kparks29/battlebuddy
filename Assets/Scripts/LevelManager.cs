@@ -39,8 +39,32 @@ public class LevelManager : NetworkBehaviour {
         }
     }
 
-	// Update is called once per frame
-	void Update () {
+    [Command]
+    public void CmdP1Ready()
+    {
+        RpcP1Ready();
+    }
+
+    [ClientRpc]
+    void RpcP1Ready()
+    {
+        p1Ready = true;
+    }
+
+    [Command]
+    public void CmdP2Ready()
+    {
+        RpcP2Ready();
+    }
+
+    [ClientRpc]
+    void RpcP2Ready()
+    {
+        p2Ready = true;
+    }
+
+    // Update is called once per frame
+    void Update () {
 	    if(p1Ready && p2Ready && go)
         {
             if (isServer)

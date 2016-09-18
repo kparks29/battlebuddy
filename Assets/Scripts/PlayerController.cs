@@ -177,11 +177,13 @@ public class PlayerController : NetworkBehaviour {
                 {
                     if (playerNumber == 1)
                     {
-                        readyCollider.GetComponentInParent<LevelManager>().p1Ready = true;
+                        print("P1 click ready");
+                        readyCollider.GetComponentInParent<LevelManager>().CmdP1Ready();
                     }
                     else if (playerNumber == 2)
                     {
-                        readyCollider.GetComponentInParent<LevelManager>().p2Ready = true;
+                        print("P2 clicked ready");
+                        readyCollider.GetComponentInParent<LevelManager>().CmdP2Ready();
                     }
                     else
                     {
