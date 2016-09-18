@@ -78,6 +78,19 @@ public class LevelManager : NetworkBehaviour {
         p2ReadySign.GetComponent<Renderer>().material.color = Color.red;
     }
 
+    [Command]
+    public void CmdEndBattle()
+    {
+        RpcEndBattle();
+    }
+
+    [ClientRpc]
+    void RpcEndBattle()
+    {
+        p1ReadySign.GetComponent<Renderer>().material.color = Color.grey;
+        p2ReadySign.GetComponent<Renderer>().material.color = Color.grey;
+    }
+
     // Update is called once per frame
     void Update () {
 	    if(p1Ready && p2Ready && go)

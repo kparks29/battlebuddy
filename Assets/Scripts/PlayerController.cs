@@ -355,11 +355,11 @@ public class PlayerController : NetworkBehaviour {
         {
             if (isLocalPlayer)
             {
-                print("You lose");
+                CmdFinishBattle(true);
             }
             else
             {
-                print("You win!");
+                //print("You win!");
             }
             Destroy(myBuddy.gameObject);
         }
@@ -367,6 +367,27 @@ public class PlayerController : NetworkBehaviour {
         {
             print("Dead");
         }
+    }
 
+    [Command]
+    void CmdFinishBattle(bool lost)
+    {
+        RpcFinishBattle(lost);
+    }
+
+    [ClientRpc]
+    void RpcFinishBattle(bool lost)
+    {
+        if (isServer)
+        {
+            Buddy[] b = FindObjectsOfType<Buddy>();
+            foreach(Buddy bud in b)
+            {
+                Destroy(bud);
+            }
+
+            LevelManager lm = FindObjectOfType<LevelManager>();
+            lm.CmdEndBattle();
+        }
     }
 }
