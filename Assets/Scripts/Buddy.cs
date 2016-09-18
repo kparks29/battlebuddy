@@ -43,8 +43,11 @@ public class Buddy : NetworkBehaviour {
         lineRend = GetComponent<LineRenderer>();
         hitLocation.transform.parent = null;
         startHeight = fireLocation.position.y;
-        if(myPlayer.isLocalPlayer)
+        if (myPlayer.isLocalPlayer)
+        {
+            image.enabled = false;
             playerNumber = myPlayer.playerNumber;
+        }
     }
 
     public void Fire(Vector3 pos)
@@ -83,8 +86,11 @@ public class Buddy : NetworkBehaviour {
         {
             lineRend.enabled = false;
         }
-        
-        image.transform.localScale = new Vector3(health / 20, image.transform.localScale.y, image.transform.localScale.z);
+
+        if (image.enabled)
+        {
+            image.transform.localScale = new Vector3(health / 20, image.transform.localScale.y, image.transform.localScale.z);
+        }
 
         var look = Camera.main.transform.position - transform.position;
         look.y = 0;
