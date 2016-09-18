@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -18,9 +18,15 @@ public class StartUI : NetworkBehaviour {
     public NetworkManager manager;
     public GameObject canvas;
 
+    public User user;
+
+    public List<Item> weaponList;
+    public List<Item> armorList;
+    public List<Item> speedList;
+
     void Start()
     {
-
+        //user = new User();
         leftCasting = true;
         lineRend = GetComponent<LineRenderer>();
         pc = GetComponent<PlatformController>();
@@ -42,6 +48,27 @@ public class StartUI : NetworkBehaviour {
 
     void EnterCode()
     {
+
+        StartCoroutine(GetComponent<WebRequestManager>().getUser(code.text, (newUser) =>
+        {
+            user = newUser;
+        }));
+
+        StartCoroutine(GetComponent<WebRequestManager>().getItems("weapon", (itemSet) =>
+        {
+            weaponList = itemSet;
+        }));
+
+        StartCoroutine(GetComponent<WebRequestManager>().getItems("armor", (itemSet) =>
+        {
+            armorList = itemSet;
+        }));
+
+        StartCoroutine(GetComponent<WebRequestManager>().getItems("speed", (itemSet) =>
+        {
+            speedList = itemSet;
+        }));
+
         if (currentButton != null || currentImage != null)
         {
             currentImage.color = currentButton.colors.normalColor;

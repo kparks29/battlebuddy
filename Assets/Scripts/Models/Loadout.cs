@@ -6,4 +6,5 @@ public class Loadout {
 	public int speed_item_id;
 	public int armor_item_id;
 	public string name;
+    public int id;
 }

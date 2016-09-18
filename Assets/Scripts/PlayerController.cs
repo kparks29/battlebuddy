@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -27,9 +28,10 @@ public class PlayerController : NetworkBehaviour {
     [SyncVar]
     public float speed = 1f;
 
+    [SyncVar]
+    public string type = "";
 
-    bool sprinting = false;
-    public GameObject buddyPrefab;
+    public GameObject[] buddyPrefabs;
     public Buddy myBuddy;
     public Transform buddyStart;
 
@@ -56,6 +58,18 @@ public class PlayerController : NetworkBehaviour {
     Vector3 hitPos;
 
     float sprintCDTimer = 15.0f;
+    float healthCDTimer = 60.0f;
+    bool healing = false;
+    bool sprinting = false;
+
+    StartUI startObj;
+
+    [SyncVar]
+    public string weaponName;
+    [SyncVar]
+    public string armorName;
+    [SyncVar]
+    public string speedName;
 
     void Start()
     {
@@ -79,6 +93,9 @@ public class PlayerController : NetworkBehaviour {
                 }
             }
 
+            startObj = FindObjectOfType<StartUI>();
+            StartCoroutine(GetUserData());
+
             CmdSetPlayerNumber(playerNumber);
             
         }
@@ -93,6 +110,45 @@ public class PlayerController : NetworkBehaviour {
         leftRend = networkLeftHand.GetComponentInChildren<Renderer>();
         rightHandColor = rightRend.material.color;
         leftHandColor = leftRend.material.color;
+    }
+
+    IEnumerator GetUserData()
+    {
+        yield return new WaitForSeconds(1.5f);
+        print("Collected user Data");
+        List<Loadout> loadouts = startObj.user.loadouts;
+        Loadout loader = new Loadout();
+        foreach(Loadout l in loadouts)
+        {
+            if(l.id == startObj.user.equiped_loadout_index)
+            {
+                loader = l;
+            }
+        }
+
+        foreach(Item i in startObj.weaponList)
+        {
+            if (i.id == loader.weapon_item_id)
+            {
+                weaponName = i.name;
+            }
+        }
+
+        foreach (Item i in startObj.armorList)
+        {
+            if (i.id == loader.armor_item_id)
+            {
+                armorName = i.name;
+            }
+        }
+
+        foreach (Item i in startObj.speedList)
+        {
+            if (i.id == loader.speed_item_id)
+            {
+                speedName = i.name;
+            }
+        }
     }
 
     [Command]
@@ -192,12 +248,13 @@ public class PlayerController : NetworkBehaviour {
 
                 if (SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis() != Vector2.zero)
                 {
-                    CmdLeftMove(SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis(), myBuddy.transform.position);
+                    CmdLeftMove(SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis(), myBuddy.transform.position, myBuddy.body.rotation);
                 }
 
                 if (SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetTouchDown(SteamVR_Controller.ButtonMask.Touchpad) && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis().y < -.75f)
                 {
                     //myBuddy.health = 100.0f;
+                    
                     CmdHeal();
                 }
 
@@ -315,12 +372,6 @@ public class PlayerController : NetworkBehaviour {
     [Command]
     public void CmdCreateBuddy()
     {
-        //foreach(PlayerController p in FindObjectsOfType<PlayerController>())
-        //{
-
-        //}
-        //GameObject bud = (GameObject)Instantiate(buddyPrefab, buddyStart.position, buddyStart.rotation);
-        //myBuddy = bud.GetComponent<Buddy>();
         RpcCreateBuddy();
     }
 
@@ -335,20 +386,37 @@ public class PlayerController : NetworkBehaviour {
                 buddyStart = s.buddyStart;
             }
         }
-        
-        GameObject bud = (GameObject)Instantiate(buddyPrefab, buddyStart.position, buddyStart.rotation);
+        GameObject bud;
+        if (type == "attack")
+        {
+            bud = (GameObject)Instantiate(buddyPrefabs[0], buddyStart.position, buddyStart.rotation);
+        }
+        else if (type == "defense")
+        {
+            bud = (GameObject)Instantiate(buddyPrefabs[1], buddyStart.position, buddyStart.rotation);
+        }
+        else 
+        {
+            bud = (GameObject)Instantiate(buddyPrefabs[2], buddyStart.position, buddyStart.rotation);
+        }
         myBuddy = bud.GetComponent<Buddy>();
         myBuddy.myPlayer = this;
+
+        ItemSet buddiesItems = bud.GetComponent<ItemSet>();
+        buddiesItems.setupWeapon(weaponName);
+        buddiesItems.setupArmor(armorName);
+        buddiesItems.setupSpeed(speedName);
     }
 
     [Command]
-    void CmdLeftMove(Vector2 movement, Vector3 pos)
+    void CmdLeftMove(Vector2 movement, Vector3 pos, Quaternion rot)
     {
         if (myBuddy != null)
         {
+            myBuddy.body.transform.rotation = rot;
             myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * speed * 5;
             myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * speed * 5;
-            RpcLeftMove(myBuddy.transform.position);
+            RpcLeftMove(myBuddy.transform.position, movement, rot);
         }
         else
         {
@@ -357,10 +425,14 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [ClientRpc]
-    void RpcLeftMove(Vector3 pos)
+    void RpcLeftMove(Vector3 pos, Vector2 movement, Quaternion rot)
     {
         if(myBuddy != null)
+        {
+            myBuddy.body.transform.rotation = rot;
             myBuddy.transform.position = pos;
+            myBuddy.GetComponent<AnimatorController>().SetAnimParams(movement);
+        }
     }
 
     [Command]
