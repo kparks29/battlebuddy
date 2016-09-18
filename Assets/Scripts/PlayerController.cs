@@ -2,12 +2,15 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour {
 
     public Transform networkHead;
     public Transform networkLeftHand;
     public Transform networkRightHand;
+
+    public Image image;
 
     [SyncVar]
     public int playerNumber = 0;
@@ -67,6 +70,10 @@ public class PlayerController : NetworkBehaviour {
             rightHandDevice = SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index);
             leftHandDevice = SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index);
         }
+        else
+        {
+            image.enabled = false;
+        }
 
         //print("Not Local Start");
 
@@ -111,7 +118,11 @@ public class PlayerController : NetworkBehaviour {
             networkHead.rotation = pc.head.rotation;
             networkLeftHand.rotation = pc.leftHand.rotation;
             networkRightHand.rotation = pc.rightHand.rotation;
-            
+
+            if (myBuddy != null)
+            {
+                image.transform.localScale = new Vector3(myBuddy.health / 5, image.transform.localScale.y, image.transform.localScale.z);
+            }
         }
     }
 
