@@ -9,6 +9,8 @@ public class Projectile : MonoBehaviour {
     public float damage = 10.0f;
 
     public Buddy maker;
+
+    public GameObject explosion;
     Rigidbody body;
     void Start()
     {
@@ -26,13 +28,18 @@ public class Projectile : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-        if (c.tag == "Buddy" && c.GetComponent<Buddy>() != maker)
+        if ((c.tag == "Buddy" || c.tag == "Wall") && c.GetComponent<Buddy>() != maker)
         {
             //if (maker.myPlayer.isLocalPlayer)
             {
+                print(c.name);
+                Instantiate(explosion, transform.position, transform.rotation);
                 Buddy b = c.GetComponent<Buddy>();
-                print("Player "+maker.myPlayer.playerNumber+ " Hit player " + b.playerNumber);
-                b.TakeDamage(damage);
+                //print("Player "+maker.myPlayer.playerNumber+ " Hit player " + b.playerNumber);
+                if (b != null)
+                {
+                    b.TakeDamage(damage);
+                }
                 Destroy(gameObject);
             }
         }
