@@ -241,9 +241,9 @@ public class PlayerController : NetworkBehaviour {
         if (isServer)
         {
             if (num == 1)
-                FindObjectOfType<LevelManager>().CmdP1Ready();
+                FindObjectOfType<LevelManager>().CmdP1Ready(true);
             else
-                FindObjectOfType<LevelManager>().CmdP2Ready();
+                FindObjectOfType<LevelManager>().CmdP2Ready(true);
         }
     }
     [Command]
