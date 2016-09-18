@@ -164,9 +164,9 @@ public class PlayerController : NetworkBehaviour {
         //{
 
         //}
-        GameObject bud = (GameObject)Instantiate(buddyPrefab, buddyStart.position, buddyStart.rotation);
-        myBuddy = bud.GetComponent<Buddy>();
-        RpcCreateBuddy();
+        //GameObject bud = (GameObject)Instantiate(buddyPrefab, buddyStart.position, buddyStart.rotation);
+        //myBuddy = bud.GetComponent<Buddy>();
+        //RpcCreateBuddy();
     }
 
     [ClientRpc]
