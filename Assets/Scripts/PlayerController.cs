@@ -197,14 +197,13 @@ public class PlayerController : NetworkBehaviour {
 
                 if (SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetTouchDown(SteamVR_Controller.ButtonMask.Touchpad) && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis().y < -.75f)
                 {
-                    myBuddy.health = 100.0f;
+                    //myBuddy.health = 100.0f;
+                    CmdHeal();
                 }
 
                 if (!sprinting && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetTouchDown(SteamVR_Controller.ButtonMask.Touchpad) && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis().y > .75f)
                 {
-                    speed *= 3;
-                    sprinting = true;
-                    StartCoroutine(SpeedAbilityTimer());
+                    CmdSprint();
                 }
                 else if (sprinting)
                 {
@@ -256,6 +255,37 @@ public class PlayerController : NetworkBehaviour {
         {
             CmdCreateBuddy();
         }
+    }
+
+    [Command]
+    void CmdSprint()
+    {
+        RpcSprint();
+    }
+
+    [ClientRpc]
+    void RpcSprint()
+    {
+        if (isServer)
+        {
+            speed *= 3;
+            sprinting = true;
+            StartCoroutine(SpeedAbilityTimer());
+        }
+        sprintCDTimer = 15.0f;
+    }
+
+    [Command]
+    void CmdHeal()
+    {
+        RpcHeal();
+    }
+
+    [ClientRpc]
+    void RpcHeal()
+    {
+        if(isServer)
+            myBuddy.health = 100;
     }
 
     IEnumerator SpeedAbilityTimer()

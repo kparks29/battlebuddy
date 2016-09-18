@@ -63,7 +63,7 @@ public class Buddy : NetworkBehaviour {
 
     void LateUpdate()
     {
-        if (myPlayer.isLocalPlayer && myPlayer.rightCasting)
+        if (myPlayer != null && myPlayer.isLocalPlayer && myPlayer.rightCasting)
         {
             if (!lineRend.enabled)
                 lineRend.enabled = true;
