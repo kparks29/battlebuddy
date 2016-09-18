@@ -48,6 +48,7 @@ public class LevelManager : NetworkBehaviour {
     [ClientRpc]
     void RpcP1Ready()
     {
+        p1ReadySign.GetComponent<Renderer>().material.color = Color.green;
         p1Ready = true;
     }
 
@@ -60,6 +61,7 @@ public class LevelManager : NetworkBehaviour {
     [ClientRpc]
     void RpcP2Ready()
     {
+        p2ReadySign.GetComponent<Renderer>().material.color = Color.green;
         p2Ready = true;
     }
 
@@ -87,6 +89,9 @@ public class LevelManager : NetworkBehaviour {
         {
             p.CmdCreateBuddy();
         }
+
+        p1ReadySign.GetComponent<Renderer>().material.color = Color.red;
+        p2ReadySign.GetComponent<Renderer>().material.color = Color.red;
         //manager.ServerChangeScene("Arena");
     }
 
