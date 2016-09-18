@@ -175,15 +175,18 @@ public class PlayerController : NetworkBehaviour {
                 leftCasting = false;
                 if (readyCollider != null)
                 {
+
                     if (playerNumber == 1)
                     {
+                        CmdHitBox(1);
                         print("P1 click ready");
-                        readyCollider.GetComponentInParent<LevelManager>().CmdP1Ready();
+                        //readyCollider.GetComponentInParent<LevelManager>().CmdP1Ready();
                     }
                     else if (playerNumber == 2)
                     {
+                        CmdHitBox(2);
                         print("P2 clicked ready");
-                        readyCollider.GetComponentInParent<LevelManager>().CmdP2Ready();
+                        //readyCollider.GetComponentInParent<LevelManager>().CmdP2Ready();
                     }
                     else
                     {
@@ -226,6 +229,23 @@ public class PlayerController : NetworkBehaviour {
         //}
     }
 
+    [Command]
+    void CmdHitBox(int num)
+    {
+        RpcHitBox(num);
+    }
+
+    [ClientRpc]
+    void RpcHitBox(int num)
+    {
+        if (isServer)
+        {
+            if (num == 1)
+                FindObjectOfType<LevelManager>().CmdP1Ready();
+            else
+                FindObjectOfType<LevelManager>().CmdP2Ready();
+        }
+    }
     [Command]
     public void CmdCreateBuddy()
     {
