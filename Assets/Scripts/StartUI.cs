@@ -89,7 +89,8 @@ public class StartUI : NetworkBehaviour {
                 else
                     InputCode(Convert.ToInt32(currentButton.transform.name));
 
-                currentImage.color = currentButton.colors.normalColor;
+                if(currentImage != null)
+                    currentImage.color = currentButton.colors.normalColor;
             }
         }
 
