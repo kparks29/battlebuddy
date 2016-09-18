@@ -157,7 +157,7 @@ public class PlayerController : NetworkBehaviour {
 
                 if (leftHandDevice.GetAxis() != Vector2.zero)
                 {
-                    CmdLeftMove(leftHandDevice.GetAxis());
+                    CmdLeftMove(leftHandDevice.GetAxis(), myBuddy.transform.position);
                 }
             }
         }
@@ -198,16 +198,19 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [Command]
-    void CmdLeftMove(Vector2 movement)
-    {
-        RpcLeftMove(movement);
-    }
-
-    [ClientRpc]
-    void RpcLeftMove(Vector2 movement)
+    void CmdLeftMove(Vector2 movement, Vector3 pos)
     {
         myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
         myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
+        RpcLeftMove(myBuddy.transform.position);
+    }
+
+    [ClientRpc]
+    void RpcLeftMove(Vector3 pos)
+    {
+        //myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
+        //myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
+        myBuddy.transform.position = pos;
     }
 
     [Command]
@@ -219,8 +222,10 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     void RpcRightMove(Vector2 movement)
     {
+
         myBuddy.hitLocation.transform.position += myBuddy.transform.forward * movement.y * Time.deltaTime * 5;
         myBuddy.hitLocation.transform.position += myBuddy.transform.right * movement.x * Time.deltaTime * 5;
+        
     }
 
     [Command]
