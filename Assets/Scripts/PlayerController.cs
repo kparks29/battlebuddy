@@ -359,7 +359,7 @@ public class PlayerController : NetworkBehaviour {
             }
             else
             {
-                //print("You win!");
+                print("You win!");
             }
             Destroy(myBuddy.gameObject);
         }
