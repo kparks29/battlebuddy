@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
-    public float speed = 1000.0f;
+    public float speed = 10.0f;
     public float cd = 2.5f;
 
     public float damage = 10.0f;
@@ -13,6 +13,7 @@ public class Projectile : MonoBehaviour {
     void Start()
     {
         body = GetComponent<Rigidbody>();
+        body.velocity = transform.forward * speed;
     }
 
     void FixedUpdate()
