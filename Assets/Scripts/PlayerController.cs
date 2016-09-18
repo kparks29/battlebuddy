@@ -18,7 +18,10 @@ public class PlayerController : NetworkBehaviour {
     [SyncVar]
     public int score = 0;
 
+    [SyncVar]
+    public float speed = 5.0f;
 
+    bool sprinting = false;
     public GameObject buddyPrefab;
     public Buddy myBuddy;
     public Transform buddyStart;
@@ -45,6 +48,8 @@ public class PlayerController : NetworkBehaviour {
 
     Vector3 hitPos;
 
+    float sprintCDTimer = 15.0f;
+
     void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -68,9 +73,7 @@ public class PlayerController : NetworkBehaviour {
             }
 
             CmdSetPlayerNumber(playerNumber);
-
-            //rightHandDevice = SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index);
-            //leftHandDevice = SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index);
+            
         }
         else
         {
@@ -184,6 +187,27 @@ public class PlayerController : NetworkBehaviour {
                 {
                     CmdLeftMove(SteamVR_Controller.Input((int)pc.leftHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis(), myBuddy.transform.position);
                 }
+
+                if (SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetTouchDown(SteamVR_Controller.ButtonMask.Touchpad) && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis().y < -.75f)
+                {
+                    myBuddy.health = 100.0f;
+                }
+
+                if (!sprinting && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetTouchDown(SteamVR_Controller.ButtonMask.Touchpad) && SteamVR_Controller.Input((int)pc.rightHand.GetComponent<SteamVR_TrackedObject>().index).GetAxis().y > .75f)
+                {
+                    speed *= 3;
+                    sprinting = true;
+                    StartCoroutine(SpeedAbilityTimer());
+                }
+                else if (sprinting)
+                {
+                    sprintCDTimer -= Time.deltaTime;
+                    if(sprintCDTimer <= 0.0f)
+                    {
+                        sprinting = false;
+                        sprintCDTimer = 15.0f;
+                    }
+                }
             }
             else
             {
@@ -226,6 +250,14 @@ public class PlayerController : NetworkBehaviour {
             CmdCreateBuddy();
         }
     }
+
+    IEnumerator SpeedAbilityTimer()
+    {
+        yield return new WaitForSeconds(5);
+        speed /= 3;
+        //StartSprintCDTimer();
+    }
+
 
     [Command]
     void CmdHitBox(int num)
@@ -278,8 +310,8 @@ public class PlayerController : NetworkBehaviour {
     {
         if (myBuddy != null)
         {
-            myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * 3;
-            myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * 3;
+            myBuddy.transform.position += transform.forward * movement.y * Time.deltaTime * speed;
+            myBuddy.transform.position += transform.right * movement.x * Time.deltaTime * speed;
             RpcLeftMove(myBuddy.transform.position);
         }
         else

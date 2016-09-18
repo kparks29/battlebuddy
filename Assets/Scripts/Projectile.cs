@@ -30,12 +30,9 @@ public class Projectile : MonoBehaviour {
     {
         if ((c.tag == "Buddy" || c.tag == "Wall") && c.GetComponent<Buddy>() != maker)
         {
-            //if (maker.myPlayer.isLocalPlayer)
             {
-                print(c.name);
                 Instantiate(explosion, transform.position, transform.rotation);
                 Buddy b = c.GetComponent<Buddy>();
-                //print("Player "+maker.myPlayer.playerNumber+ " Hit player " + b.playerNumber);
                 if (b != null)
                 {
                     b.TakeDamage(damage);
