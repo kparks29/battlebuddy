@@ -284,8 +284,7 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     void RpcHeal()
     {
-        if(isServer)
-            myBuddy.health = 100;
+        myBuddy.health = 100;
     }
 
     IEnumerator SpeedAbilityTimer()
