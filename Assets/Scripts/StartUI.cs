@@ -42,8 +42,18 @@ public class StartUI : NetworkBehaviour {
 
     void EnterCode()
     {
+        if (currentButton != null || currentImage != null)
+        {
+            currentImage.color = currentButton.colors.normalColor;
+            currentImage = null;
+            currentButton = null;
+            buttonSet = false;
+        }
+        leftCasting = false;
+        lineRend.enabled = false;
+        canvas.SetActive(false);
         //Code entered here
-        if(player == 1)
+        if (player == 1)
         {
             //manager.StartServer();
             manager.StartHost();
@@ -52,9 +62,6 @@ public class StartUI : NetworkBehaviour {
         {
             manager.StartClient();
         }
-        leftCasting = false;
-        lineRend.enabled = false;
-        canvas.SetActive(false);
     }
 
     void Update()
