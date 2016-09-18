@@ -31,8 +31,11 @@ public class Buddy : NetworkBehaviour {
 
     LineRenderer lineRend;
 
+    Color myOGColor;
+
     // Use this for initialization
     void Start () {
+        myOGColor = GetComponentInChildren<Renderer>().material.color;
         lineRend = GetComponent<LineRenderer>();
         hitLocation.transform.parent = null;
         startHeight = fireLocation.position.y;
@@ -118,6 +121,14 @@ public class Buddy : NetworkBehaviour {
     {
         health -= amount;
         print("Took " + amount + " damage, " + health + " health remaining");
+        GetComponentInChildren<Renderer>().material.color = Color.yellow;
+        StartCoroutine(ChangeColorBack());
         return health;
+    }
+
+    IEnumerator ChangeColorBack()
+    {
+        yield return new WaitForSeconds(.15f);
+        GetComponentInChildren<Renderer>().material.color = myOGColor;
     }
 }
